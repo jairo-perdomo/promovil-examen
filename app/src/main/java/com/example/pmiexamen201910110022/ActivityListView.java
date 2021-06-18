@@ -1,12 +1,16 @@
 package com.example.pmiexamen201910110022;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pmiexamen201910110022.tables.Contacts;
 import com.example.pmiexamen201910110022.transactions.Transactions;
@@ -19,6 +23,7 @@ public class ActivityListView extends AppCompatActivity {
     ListView viewListContacts;
     ArrayList<Contacts> arrayListContacts;
     ArrayList<String> arrayListStringContacts;
+    int listrowposition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +31,39 @@ public class ActivityListView extends AppCompatActivity {
         setContentView(R.layout.activity_list_view);
 
         connection = new SQLiteConexion(this, Transactions.nameDataBase, null, 1);
-        viewListContacts = (ListView) findViewById(R.id.listContacts);
+        viewListContacts = findViewById(R.id.listContacts);
         
         getListContacts();
 
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayListStringContacts);
         viewListContacts.setAdapter(arrayAdapter);
 
-    }
+        viewListContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                listrowposition = arrayListContacts.get(position).getId();
+                String positionString = String.valueOf(listrowposition);
+                Toast.makeText(getApplicationContext(), positionString, Toast.LENGTH_LONG).show();
+                arrayAdapter.notifyDataSetChanged();
+            }
+        });
 
+        Button btnDelete = findViewById(R.id.btnDelete);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteItem();
+
+            }
+        });
+    }
+    private void DeleteItem(){
+        SQLiteDatabase db = connection.getWritableDatabase();
+        String[] parameterId = {String.valueOf(listrowposition)};
+
+        db.delete(Transactions.tableContacts, Transactions.id + "=?", parameterId);
+        Toast.makeText(getApplicationContext(), "Registro Eliminado", Toast.LENGTH_LONG).show();
+    }
     private void getListContacts() {
         SQLiteDatabase db = connection.getReadableDatabase();
         Contacts listContacts;
