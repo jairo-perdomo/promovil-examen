@@ -3,6 +3,7 @@ package com.example.pmiexamen201910110022;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -41,6 +42,15 @@ public class ActivityInsert extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addContact();
+            }
+        });
+
+        Button savedContacts = findViewById(R.id.viewBtnSavedContacts);
+        savedContacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ActivityListView.class);
+                startActivity(intent);
             }
         });
     }

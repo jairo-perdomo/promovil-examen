@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         tools:ignore="MissingConstraints">
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginEnd="5dp"
-        android:layout_marginBottom="79dp"
+        android:layout_marginBottom="56dp"
         android:layout_weight="1"
         android:text="Eliminar Contacto"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -43,15 +43,17 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="114dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="114dp"
-        android:layout_marginBottom="23dp"
+        android:layout_marginBottom="10dp"
         android:layout_weight="1"
         android:text="Llamar Contacto"
         app:layout_constraintBottom_toTopOf="@+id/btnDelete"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/btnUpdate"
@@ -60,7 +62,7 @@
         android:layout_gravity="center"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="3dp"
-        android:layout_marginBottom="79dp"
+        android:layout_marginBottom="56dp"
         android:layout_weight="1"
         android:text="Actualizar Contacto"
         app:layout_constraintBottom_toBottomOf="parent"
