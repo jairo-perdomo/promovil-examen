@@ -51,20 +51,35 @@ public class ActivityInsert extends AppCompatActivity {
 
         ContentValues values = new ContentValues();
         values.put(Transactions.country, country = spinnerCountries.getSelectedItem().toString());
-        values.put(Transactions.name, name.getText().toString());
-        values.put(Transactions.phone, phone.getText().toString());
-        values.put(Transactions.note, note.getText().toString());
+        name.setError(null);
+        phone.setError(null);
+        note.setError(null);
+        String verifiedName = name.getText().toString();
+        String verifiedPhone = phone.getText().toString();
+        String verifiedNote = note.getText().toString();
+        if(verifiedName.trim().isEmpty()) {
+            name.setError("Ingrese su nombre completo porfavor");
+        } else if(verifiedPhone.trim().isEmpty()){
+            phone.setError("Ingrese su telefono porfavor");
+        } else if(verifiedNote.trim().isEmpty()){
+            note.setError("Ingrese una nota porfavor");
+        } else {
+            values.put(Transactions.name, verifiedName);
+            values.put(Transactions.phone, verifiedPhone);
+            values.put(Transactions.note, verifiedNote);
 
-        Long result = db.insert(Transactions.tableContacts, Transactions.id, values);
-        Toast.makeText(getApplicationContext(),"Contacto guardado correctamente"+ result.toString(), Toast.LENGTH_LONG).show();
-        db.close();
+            Long result = db.insert(Transactions.tableContacts, Transactions.id, values);
+            Toast.makeText(getApplicationContext(),"Contacto guardado correctamente: "+ result.toString(), Toast.LENGTH_LONG).show();
+            db.close();
 
-        ClearFields();
+            ClearFields();
+        }
     }
 
     private void ClearFields() {
         name.setText("");
         phone.setText("");
         note.setText("");
+        spinnerCountries.setSelection(0);
     }
 }
