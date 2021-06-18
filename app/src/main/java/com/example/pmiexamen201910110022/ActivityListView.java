@@ -78,7 +78,8 @@ public class ActivityListView extends AppCompatActivity {
     private void getValuesToSendUpdateScreen(){
         SQLiteDatabase db = connection.getWritableDatabase();
         String[] parameterId = {String.valueOf(listrowposition)};
-        String[] fields = {Transactions.country,
+        String[] fields = {Transactions.id,
+                           Transactions.country,
                            Transactions.name,
                            Transactions.phone,
                            Transactions.note};
@@ -93,10 +94,11 @@ public class ActivityListView extends AppCompatActivity {
 
             Intent intentUpdate = new Intent(this, ActivityUpdate.class);
             Bundle sendValuesforUpdate = new Bundle();
-            sendValuesforUpdate.putString("country", cursorQueryContact.getString(0));
-            sendValuesforUpdate.putString("name", cursorQueryContact.getString(1));
-            sendValuesforUpdate.putString("phone", cursorQueryContact.getString(2));
-            sendValuesforUpdate.putString("note", cursorQueryContact.getString(3));
+            sendValuesforUpdate.putInt("id", cursorQueryContact.getInt(0));
+            sendValuesforUpdate.putString("country", cursorQueryContact.getString(1));
+            sendValuesforUpdate.putString("name", cursorQueryContact.getString(2));
+            sendValuesforUpdate.putString("phone", cursorQueryContact.getString(3));
+            sendValuesforUpdate.putString("note", cursorQueryContact.getString(4));
 
             intentUpdate.putExtras(sendValuesforUpdate);
             startActivity(intentUpdate);
