@@ -57,12 +57,14 @@ public class ActivityInsert extends AppCompatActivity {
         String verifiedName = name.getText().toString();
         String verifiedPhone = phone.getText().toString();
         String verifiedNote = note.getText().toString();
-        if(verifiedName.trim().isEmpty()) {
-            name.setError("Ingrese su nombre completo porfavor");
-        } else if(verifiedPhone.trim().isEmpty()){
-            phone.setError("Ingrese su telefono porfavor");
-        } else if(verifiedNote.trim().isEmpty()){
-            note.setError("Ingrese una nota porfavor");
+//        String onlyLetterSpaces = "[a-zA-Z][a-zA-Z ]*"; Expresion regular para solo letras y espacios
+
+        if(verifiedName.trim().isEmpty() || verifiedName.length() > 50)  {
+            name.setError("Ingrese su nombre completo porfavor (Maximo 50 caracteres)");
+        } else if(verifiedPhone.trim().isEmpty() || verifiedPhone.length() > 15){
+            phone.setError("Ingrese su telefono porfavor (Maximo 15 caracteres)");
+        } else if(verifiedNote.trim().isEmpty() || verifiedNote.length() > 50){
+            note.setError("Ingrese una nota porfavor (Maximo 50 caracteres)");
         } else {
             values.put(Transactions.name, verifiedName);
             values.put(Transactions.phone, verifiedPhone);
