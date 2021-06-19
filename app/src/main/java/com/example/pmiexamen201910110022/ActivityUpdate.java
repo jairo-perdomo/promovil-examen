@@ -1,8 +1,7 @@
 package com.example.pmiexamen201910110022;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pmiexamen201910110022.transactions.Transactions;
 
@@ -49,7 +50,8 @@ public class ActivityUpdate extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 updateContact();
-                finish();
+                Intent intentListView = new Intent(getApplicationContext(), ActivityListView.class);
+                startActivity(intentListView);
             }
         });
 

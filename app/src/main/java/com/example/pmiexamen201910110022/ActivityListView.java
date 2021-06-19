@@ -106,6 +106,7 @@ public class ActivityListView extends AppCompatActivity {
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 getValuesToSendUpdateScreen();
             }
         });
@@ -180,7 +181,7 @@ public class ActivityListView extends AppCompatActivity {
             intentUpdate.putExtras(sendValuesforUpdate);
             startActivity(intentUpdate);
         } catch (Exception e){
-            Toast.makeText(getApplicationContext(), "Ocurrio un error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Seleccione un contacto antes", Toast.LENGTH_SHORT).show();
         }
     }
 
