@@ -49,6 +49,7 @@ public class ActivityUpdate extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 updateContact();
+                finish();
             }
         });
 

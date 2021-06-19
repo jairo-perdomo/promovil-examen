@@ -1,9 +1,10 @@
 package com.example.pmiexamen201910110022;
 
-import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,11 +14,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.pmiexamen201910110022.tables.Contacts;
 import com.example.pmiexamen201910110022.transactions.Transactions;
 
 import java.util.ArrayList;
+
+import static android.Manifest.permission.CALL_PHONE;
 
 public class ActivityListView extends AppCompatActivity {
 
@@ -26,7 +30,7 @@ public class ActivityListView extends AppCompatActivity {
     ArrayList<Contacts> arrayListContacts;
     ArrayList<String> arrayListStringContacts;
     int listrowposition;
-
+    String phoneItemSelected;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +38,7 @@ public class ActivityListView extends AppCompatActivity {
 
         connection = new SQLiteConexion(this, Transactions.nameDataBase, null, 1);
         viewListContacts = findViewById(R.id.listContacts);
-        
+
         getListContacts();
 
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayListStringContacts);
@@ -44,16 +48,19 @@ public class ActivityListView extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 listrowposition = arrayListContacts.get(position).getId();
+                phoneItemSelected = arrayListContacts.get(position).getPhone();
                 String positionString = String.valueOf(listrowposition);
-                Toast.makeText(getApplicationContext(), positionString, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Contacto: "+positionString+" seleccionado", Toast.LENGTH_SHORT).show();
             }
         });
+
 
         Button btnDelete = findViewById(R.id.btnDelete);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DeleteItem();
+                finish();
                 Intent intent = new Intent(getApplicationContext(), ActivityListView.class);
                 startActivity(intent);
             }
@@ -66,6 +73,34 @@ public class ActivityListView extends AppCompatActivity {
                 getValuesToSendUpdateScreen();
             }
         });
+
+        Button btnCall = findViewById(R.id.btnCall);
+        btnCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent callIntent = new Intent(Intent.ACTION_CALL);
+//                callIntent.setData(Uri.parse("tel:12345678"));
+//                startActivity(callIntent);
+
+                Intent i = new Intent(Intent.ACTION_CALL);
+                i.setData(Uri.parse("tel:"+phoneItemSelected));
+
+                if (ContextCompat.checkSelfPermission(getApplicationContext(), CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                    startActivity(i);
+                } else {
+                    requestPermissions(new String[]{CALL_PHONE}, 1);
+                }
+            }
+        });
+
+    }
+
+    public void sendPhonetoCallScreen(){
+//        Intent intentCall = new Intent(this, ActivityCall.class);
+//        Bundle sendPhoneToCall = new Bundle();
+//        sendPhoneToCall.putString("phone", phoneItemSelected);
+//        intentCall.putExtras(sendPhoneToCall);
+//        startActivity(intentCall);
     }
     private void DeleteItem(){
         SQLiteDatabase db = connection.getWritableDatabase();
