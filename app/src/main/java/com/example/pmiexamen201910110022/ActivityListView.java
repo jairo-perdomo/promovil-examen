@@ -1,5 +1,6 @@
 package com.example.pmiexamen201910110022;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -31,6 +33,9 @@ public class ActivityListView extends AppCompatActivity {
     ArrayList<String> arrayListStringContacts;
     int listrowposition;
     String phoneItemSelected;
+    String regionCode;
+    String regionCodeExtracted;
+    String rowNameSelected;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +53,19 @@ public class ActivityListView extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 listrowposition = arrayListContacts.get(position).getId();
+                rowNameSelected = arrayListContacts.get(position).getName();
+                regionCode = arrayListContacts.get(position).getCountry();
                 phoneItemSelected = arrayListContacts.get(position).getPhone();
+
+                if(regionCode.contains("504")){
+                    regionCodeExtracted = "+504";
+                } else if(regionCode.contains("506")){
+                    regionCodeExtracted = "+506";
+                } else if(regionCode.contains("503")){
+                    regionCodeExtracted = "+503";
+                } else if(regionCode.contains("502")){
+                    regionCodeExtracted = "+502";
+                }
                 String positionString = String.valueOf(listrowposition);
                 Toast.makeText(getApplicationContext(), "Contacto: "+positionString+" seleccionado", Toast.LENGTH_SHORT).show();
             }
@@ -59,10 +76,29 @@ public class ActivityListView extends AppCompatActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeleteItem();
-                finish();
-                Intent intent = new Intent(getApplicationContext(), ActivityListView.class);
-                startActivity(intent);
+
+                AlertDialog.Builder alertDelete = new AlertDialog.Builder(ActivityListView.this);
+                alertDelete.setMessage("Esta seguro que desea eliminar a "+rowNameSelected)
+                        .setCancelable(false)
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                DeleteItem();
+                                finish();
+                                Intent intent = new Intent(getApplicationContext(), ActivityListView.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog tittle = alertDelete.create();
+                tittle.setTitle("ADVERTENCIA");
+                tittle.show();
+
             }
         });
 
@@ -78,30 +114,36 @@ public class ActivityListView extends AppCompatActivity {
         btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent callIntent = new Intent(Intent.ACTION_CALL);
-//                callIntent.setData(Uri.parse("tel:12345678"));
-//                startActivity(callIntent);
+                AlertDialog.Builder alertCall = new AlertDialog.Builder(ActivityListView.this);
+                alertCall.setMessage("Desea llamar a "+rowNameSelected)
+                        .setCancelable(false)
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent i = new Intent(Intent.ACTION_CALL);
+                                i.setData(Uri.parse("tel:"+ regionCodeExtracted + phoneItemSelected));
 
-                Intent i = new Intent(Intent.ACTION_CALL);
-                i.setData(Uri.parse("tel:"+phoneItemSelected));
-
-                if (ContextCompat.checkSelfPermission(getApplicationContext(), CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                    startActivity(i);
-                } else {
-                    requestPermissions(new String[]{CALL_PHONE}, 1);
-                }
+                                if (ContextCompat.checkSelfPermission(getApplicationContext(), CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                                    startActivity(i);
+                                } else {
+                                    requestPermissions(new String[]{CALL_PHONE}, 1);
+                                }
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog tittle = alertCall.create();
+                tittle.setTitle("ACCION");
+                tittle.show();
             }
         });
 
     }
 
-    public void sendPhonetoCallScreen(){
-//        Intent intentCall = new Intent(this, ActivityCall.class);
-//        Bundle sendPhoneToCall = new Bundle();
-//        sendPhoneToCall.putString("phone", phoneItemSelected);
-//        intentCall.putExtras(sendPhoneToCall);
-//        startActivity(intentCall);
-    }
     private void DeleteItem(){
         SQLiteDatabase db = connection.getWritableDatabase();
         String[] parameterId = {String.valueOf(listrowposition)};
