@@ -76,28 +76,32 @@ public class ActivityListView extends AppCompatActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(listrowposition > 0){
+                    AlertDialog.Builder alertDelete = new AlertDialog.Builder(ActivityListView.this);
+                    alertDelete.setMessage("Esta seguro que desea eliminar a "+rowNameSelected)
+                            .setCancelable(false)
+                            .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DeleteItem();
+                                    finish();
+                                    Intent intent = new Intent(getApplicationContext(), ActivityListView.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog tittle = alertDelete.create();
+                    tittle.setTitle("ADVERTENCIA");
+                    tittle.show();
 
-                AlertDialog.Builder alertDelete = new AlertDialog.Builder(ActivityListView.this);
-                alertDelete.setMessage("Esta seguro que desea eliminar a "+rowNameSelected)
-                        .setCancelable(false)
-                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                DeleteItem();
-                                finish();
-                                Intent intent = new Intent(getApplicationContext(), ActivityListView.class);
-                                startActivity(intent);
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog tittle = alertDelete.create();
-                tittle.setTitle("ADVERTENCIA");
-                tittle.show();
+                } else{
+                    Toast.makeText(getApplicationContext(), "Seleccione un contacto para poder eliminar", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -106,8 +110,12 @@ public class ActivityListView extends AppCompatActivity {
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-                getValuesToSendUpdateScreen();
+                if(listrowposition > 0){
+                    finish();
+                    getValuesToSendUpdateScreen();
+                } else{
+                    Toast.makeText(getApplicationContext(), "Seleccione un contacto para poder actualizar", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -115,32 +123,37 @@ public class ActivityListView extends AppCompatActivity {
         btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alertCall = new AlertDialog.Builder(ActivityListView.this);
-                alertCall.setMessage("Desea llamar a "+rowNameSelected)
-                        .setCancelable(false)
-                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent(Intent.ACTION_CALL);
-                                i.setData(Uri.parse("tel:"+ regionCodeExtracted + phoneItemSelected));
+                if(listrowposition> 0){
+                    AlertDialog.Builder alertCall = new AlertDialog.Builder(ActivityListView.this);
+                    alertCall.setMessage("Desea llamar a "+rowNameSelected)
+                            .setCancelable(false)
+                            .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent i = new Intent(Intent.ACTION_CALL);
+                                    i.setData(Uri.parse("tel:"+ regionCodeExtracted + phoneItemSelected));
 
-                                if (ContextCompat.checkSelfPermission(getApplicationContext(), CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                                    startActivity(i);
-                                } else {
-                                    requestPermissions(new String[]{CALL_PHONE}, 1);
+                                    if (ContextCompat.checkSelfPermission(getApplicationContext(), CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                                        startActivity(i);
+                                    } else {
+                                        requestPermissions(new String[]{CALL_PHONE}, 1);
+                                    }
                                 }
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog tittle = alertCall.create();
-                tittle.setTitle("ACCION");
-                tittle.show();
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog tittle = alertCall.create();
+                    tittle.setTitle("ACCION");
+                    tittle.show();
+                } else{
+                    Toast.makeText(getApplicationContext(), "Seleccione un contacto para poder llamar", Toast.LENGTH_SHORT).show();
+                }
             }
+
         });
 
     }
